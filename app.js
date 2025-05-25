@@ -3,10 +3,13 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
-  const messageDiv = document.getElementById('message');
+  const errorMessage = document.getElementById('error-message');
 
   try {
-    // Enviar datos al backend
+    // 1. Limpiar mensajes anteriores
+    errorMessage.style.display = 'none';
+
+    // 2. Enviar datos al backend
     const response = await fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
@@ -17,22 +20,23 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
     const data = await response.json();
 
+    // 3. Manejar respuesta
     if (response.ok) {
-      messageDiv.textContent = `✅ Autenticado como ${data.user.username} (Rol: ${data.user.rol})`;
-      messageDiv.style.color = 'green';
+      // Autenticación exitosa
+      alert(`✅ Autenticado como ${data.user.username}`);
       
-      // Guardar el token en localStorage (opcional)
+      // Redirigir o guardar token
       localStorage.setItem('token', data.token);
-      
-      // Redirigir o mostrar contenido protegido
-      console.log('Token JWT:', data.token);
+      // window.location.href = '/dashboard.html'; // Ejemplo de redirección
     } else {
-      messageDiv.textContent = `❌ Error: ${data.error}`;
-      messageDiv.style.color = 'red';
+      // Mostrar error
+      errorMessage.textContent = `❌ ${data.error || 'Error de autenticación'}`;
+      errorMessage.style.display = 'block';
     }
   } catch (err) {
-    messageDiv.textContent = '❌ Error de conexión con el servidor';
-    messageDiv.style.color = 'red';
-    console.error(err);
+    // Error de conexión
+    errorMessage.textContent = '❌ Error al conectar con el servidor';
+    errorMessage.style.display = 'block';
+    console.error('Error:', err);
   }
 });
