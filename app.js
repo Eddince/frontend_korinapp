@@ -30,13 +30,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       // window.location.href = '/dashboard.html'; // Ejemplo de redirección
     } else {
       // Mostrar error
-      errorMessage.textContent = `❌ ${data.error || 'Error de autenticación'}`;
-      errorMessage.style.display = 'block';
+      //errorMessage.textContent = `❌ ${data.error || 'Error de autenticación'}`;
+      //errorMessage.style.display = 'block';
+      alert(`❌ ${data.error || 'Error de autenticación'}`);
     }
   } catch (err) {
     // Error de conexión
-    errorMessage.textContent = '❌ Error al conectar con el servidor';
-    errorMessage.style.display = 'block';
+    //errorMessage.textContent = '❌ Error al conectar con el servidor';
+    //errorMessage.style.display = 'block';
+    alert(`❌ Error al conectar con el servidor`);
     console.error('Error:', err);
   }
 });
