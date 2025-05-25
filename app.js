@@ -3,15 +3,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
-  const errorMessage = document.getElementById('error-message');
+  const messageDiv = document.getElementById('message');
 
   try {
-    // 1. Limpiar mensajes anteriores
-    errorMessage.textContent = '';
-    errorMessage.classList.remove('alert-danger', 'alert-success');
-    errorMessage.style.display = 'none';
-
-    // 2. Enviar datos al backend
+    // Enviar datos al backend
     const response = await fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
@@ -22,25 +17,22 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
     const data = await response.json();
 
-    // 3. Manejar respuesta
     if (response.ok) {
-      // Autenticación exitosa
-      alert(`✅ Autenticado como ${data.user.username}`);
+      messageDiv.textContent = `✅ Autenticado como ${data.user.username} (Rol: ${data.user.rol})`;
+      messageDiv.style.color = 'green';
       
-      // Redirigir o guardar token
+      // Guardar el token en localStorage (opcional)
       localStorage.setItem('token', data.token);
-      // window.location.href = '/dashboard.html'; // Ejemplo de redirección
+      
+      // Redirigir o mostrar contenido protegido
+      console.log('Token JWT:', data.token);
     } else {
-      // Mostrar error
-      errorMessage.textContent = `❌ ${data.error || 'Error de autenticación'}`;
-      errorMessage.classList.add('alert-danger');
-      errorMessage.style.display = 'block';
+      messageDiv.textContent = `❌ Error: ${data.error}`;
+      messageDiv.style.color = 'red';
     }
   } catch (err) {
-    // Error de conexión
-    errorMessage.textContent = '❌ Error al conectar con el servidor';
-    errorMessage.classList.add('alert-danger');
-    errorMessage.style.display = 'block';
-    console.error('Error:', err);
+    messageDiv.textContent = '❌ Error de conexión con el servidor';
+    messageDiv.style.color = 'red';
+    console.error(err);
   }
 });
